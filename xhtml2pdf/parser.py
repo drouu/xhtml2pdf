@@ -508,9 +508,13 @@ def pisaPreLoop(node, context, collect=False):
                     return u""
 
                 if name == "link" and attr.href and attr.rel.lower() == "stylesheet":
-                    # print "CSS LINK", attr
-                    context.addCSS('\n@import "%s" %s;' %
-                                   (attr.href, ",".join(media)))
+                    if attr.href.startswith("data:"):
+                        decoded = getFile(attr.href).getFileContent()
+                        context.addCSS(decoded)
+                    else
+                        # print "CSS LINK", attr
+                        context.addCSS('\n@import "%s" %s;' %
+                                       (attr.href, ",".join(media)))
 
     for node in node.childNodes:
         result = pisaPreLoop(node, context, collect=collect)
